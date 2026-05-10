@@ -1,7 +1,7 @@
 Package: @PACKAGE_NAME@
 Architecture: all
-Description: Windows 10 icon theme
- Windows 10 icon theme for desktop environment.
+Description: Windows 10 gtk theme (dark)
+ Windows 10 dark gtk theme for desktop environment.
 Homepage: https://github.com/ChenPi11/windows10-themes-deb
 Installed-Size: @ISIZE@
 Maintainer: ChenPi11 <@PACKAGE_BUGREPORT@>

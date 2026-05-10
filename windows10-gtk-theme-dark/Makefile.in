@@ -44,11 +44,11 @@ SOURCE_DIR = $(PACKAGE_NAME)-$(PACKAGE_VERSION)
 SOURCE_TARBALL = $(SOURCE_DIR).orig.tar.gz
 BUILD_DIR = $(srcdir)/build
 
-UPSTREAM_NAME = Windows-10
-UPSTREAM_URL = https://github.com/B00merang-Artwork/$(UPSTREAM_NAME)
+UPSTREAM_NAME = Windows-10-Dark
+UPSTREAM_URL = https://github.com/B00merang-Project/$(UPSTREAM_NAME)
 UPSTREAM_SOURCE_DIR = $(UPSTREAM_NAME)-$(PACKAGE_VERSION)
-SOURCE_TARBALL_URL = $(UPSTREAM_URL)/archive/refs/tags/$(PACKAGE_VERSION).tar.gz
-SOURCE_TARBALL_SHA256SUM = 646b8bc8e04d38034889caacef3846cb6655995f1805d87b3ff7bc0b29249aae
+SOURCE_TARBALL_URL = $(UPSTREAM_URL)/archive/refs/tags/$(PACKAGE_VERSION)-dark.tar.gz
+SOURCE_TARBALL_SHA256SUM = 95797ad80fa62784588542382a92181ba76698aa1487c9b7d74ba0262b50aa5e
 
 .PHONY : all build md5sum control changelog clean mostlyclean lint
 
@@ -61,19 +61,20 @@ $(SOURCE_TARBALL) :
 $(SOURCE_DIR) : $(SOURCE_TARBALL)
 	if $(TEST) -e $@; then $(RM) -r -f $@; fi
 	$(TAR) -z -x -f $<
+	$(MV) $(UPSTREAM_NAME)-$(PACKAGE_VERSION)-dark $(UPSTREAM_NAME)-$(PACKAGE_VERSION)
 	$(MV) $(UPSTREAM_SOURCE_DIR) $@
 
 build : $(SOURCE_DIR)
 	$(RM) -r -f $(BUILD_DIR)
 	$(MKDIR_P) $(BUILD_DIR)
-	cd $< && $(INSTALL) -d -m 755 "$(PWD)/$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)"
-	cd $< && $(CP) -a * "$(PWD)/$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)"
-	$(RM) -f "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)/README.md"
-	$(RM) -f "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)/CREDITS"
-	$(RM) -f "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)/LICENSE.md"
-	$(FIND) "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)" -type d -exec $(CHMOD) 755 {} +
-	$(FIND) "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)" -type f -exec $(CHMOD) 644 {} +
-	$(FIND) "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)" -type l -xtype f -exec $(CHMOD) -c 644 {} +
+	cd $< && $(INSTALL) -d -m 755 "$(PWD)/$(BUILD_DIR)/usr/share/themes/$(UPSTREAM_NAME)"
+	cd $< && $(CP) -a * "$(PWD)/$(BUILD_DIR)/usr/share/themes/$(UPSTREAM_NAME)"
+	$(RM) -f "$(BUILD_DIR)/usr/share/themes/$(UPSTREAM_NAME)/README.md"
+	$(RM) -f "$(BUILD_DIR)/usr/share/themes/$(UPSTREAM_NAME)/CREDITS"
+	$(RM) -f "$(BUILD_DIR)/usr/share/themes/$(UPSTREAM_NAME)/LICENSE.md"
+	$(FIND) "$(BUILD_DIR)/usr/share/themes/$(UPSTREAM_NAME)" -type d -exec $(CHMOD) 755 {} +
+	$(FIND) "$(BUILD_DIR)/usr/share/themes/$(UPSTREAM_NAME)" -type f -exec $(CHMOD) 644 {} +
+	$(FIND) "$(BUILD_DIR)/usr/share/themes/$(UPSTREAM_NAME)" -type l -xtype f -exec $(CHMOD) -c 644 {} +
 	$(INSTALL) -D -m 644 $(srcdir)/copyright -t $(BUILD_DIR)/usr/share/doc/$(PACKAGE_NAME)
 
 md5sum : build

@@ -11,9 +11,8 @@ dnl GNU General Public License for more details.
 dnl
 dnl You should have received a copy of the GNU General Public License
 dnl along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 AC_PREREQ([2.72])
-AC_INIT([windows10-icon-theme], [1.0], [wushengwuxi-msctinoulk@outlook.com])
+AC_INIT([windows10-gtk-theme-dark], [3.2.1], [wushengwuxi-msctinoulk@outlook.com])
 AC_CONFIG_AUX_DIR([build-aux])
 
 # Checks for programs.

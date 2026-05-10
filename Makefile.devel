@@ -27,9 +27,16 @@ ifneq (,)
 This makefile requires GNU Make.
 endif
 
-.PHONY : all check-configures
+PROJECTS = windows10-gtk-theme \
+           windows10-gtk-theme-dark \
+           windows10-icon-theme
 
-all : configure
+.PHONY : all $(PROJECTS) check-configures
+
+all : configure $(PROJECTS)
+
+$(PROJECTS) :
+	cd $@ && $(MAKE) -f Makefile.devel
 
 pack : configure
 	./configure
@@ -47,6 +54,6 @@ check-configures : configure
 	set -e; for f in $^; do $(BASH) -x -n $$f; done
 
 clean :
-	if $(TEST) -e Makefile; then $(MAKE) -f Makefile mostlyclean; fi
+	$(MAKE) mostlyclean
 	$(RM) -r -f autom4te.cache build-aux
 	$(RM) -f configure configure~ config.log config.status aclocal.m4

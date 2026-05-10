@@ -45,10 +45,10 @@ SOURCE_TARBALL = $(SOURCE_DIR).orig.tar.gz
 BUILD_DIR = $(srcdir)/build
 
 UPSTREAM_NAME = Windows-10
-UPSTREAM_URL = https://github.com/B00merang-Artwork/$(UPSTREAM_NAME)
+UPSTREAM_URL = https://github.com/B00merang-Project/$(UPSTREAM_NAME)
 UPSTREAM_SOURCE_DIR = $(UPSTREAM_NAME)-$(PACKAGE_VERSION)
 SOURCE_TARBALL_URL = $(UPSTREAM_URL)/archive/refs/tags/$(PACKAGE_VERSION).tar.gz
-SOURCE_TARBALL_SHA256SUM = 646b8bc8e04d38034889caacef3846cb6655995f1805d87b3ff7bc0b29249aae
+SOURCE_TARBALL_SHA256SUM = e6d441104931410bc52516810e8d9b1e39dc5f9c4b57cbc2d5d57ae25aa84152
 
 .PHONY : all build md5sum control changelog clean mostlyclean lint
 
@@ -66,14 +66,14 @@ $(SOURCE_DIR) : $(SOURCE_TARBALL)
 build : $(SOURCE_DIR)
 	$(RM) -r -f $(BUILD_DIR)
 	$(MKDIR_P) $(BUILD_DIR)
-	cd $< && $(INSTALL) -d -m 755 "$(PWD)/$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)"
-	cd $< && $(CP) -a * "$(PWD)/$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)"
-	$(RM) -f "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)/README.md"
-	$(RM) -f "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)/CREDITS"
-	$(RM) -f "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)/LICENSE.md"
-	$(FIND) "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)" -type d -exec $(CHMOD) 755 {} +
-	$(FIND) "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)" -type f -exec $(CHMOD) 644 {} +
-	$(FIND) "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)" -type l -xtype f -exec $(CHMOD) -c 644 {} +
+	cd $< && $(INSTALL) -d -m 755 "$(PWD)/$(BUILD_DIR)/usr/share/themes/$(UPSTREAM_NAME)"
+	cd $< && $(CP) -a * "$(PWD)/$(BUILD_DIR)/usr/share/themes/$(UPSTREAM_NAME)"
+	$(RM) -f "$(BUILD_DIR)/usr/share/themes/$(UPSTREAM_NAME)/README.md"
+	$(RM) -f "$(BUILD_DIR)/usr/share/themes/$(UPSTREAM_NAME)/CREDITS"
+	$(RM) -f "$(BUILD_DIR)/usr/share/themes/$(UPSTREAM_NAME)/LICENSE.md"
+	$(FIND) "$(BUILD_DIR)/usr/share/themes/$(UPSTREAM_NAME)" -type d -exec $(CHMOD) 755 {} +
+	$(FIND) "$(BUILD_DIR)/usr/share/themes/$(UPSTREAM_NAME)" -type f -exec $(CHMOD) 644 {} +
+	$(FIND) "$(BUILD_DIR)/usr/share/themes/$(UPSTREAM_NAME)" -type l -xtype f -exec $(CHMOD) -c 644 {} +
 	$(INSTALL) -D -m 644 $(srcdir)/copyright -t $(BUILD_DIR)/usr/share/doc/$(PACKAGE_NAME)
 
 md5sum : build
