@@ -1,0 +1,79 @@
+# -*- makefile -*-
+
+srcdir = @srcdir@
+
+MD5SUM = @MD5SUM@
+SED = @SED@
+CHMOD = @CHMOD@
+CP = @CP@
+INSTALL = @INSTALL@
+FIND = @FIND@
+MV = @MV@
+MKDIR_P = @MKDIR_P@
+TEST = @TEST@
+RM = @RM@
+ECHO = @ECHO@
+DPKG_DEB = @DPKG_DEB@
+SHA256SUM = @SHA256SUM@
+TAR = @TAR@
+FETCH = $(srcdir)/fetch.sh
+
+PACKAGE_NAME = @PACKAGE_NAME@
+PACKAGE_VERSION = @PACKAGE_VERSION@
+PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
+PACK = $(PACKAGE_NAME)_@PACKAGE_VERSION@-1_any.deb
+
+DIST_DIR = $(srcdir)/dist
+SOURCE_DIR = $(PACKAGE_NAME)-$(PACKAGE_VERSION)
+SOURCE_TARBALL = $(SOURCE_DIR).orig.tar.gz
+BUILD_DIR = $(srcdir)/build
+
+UPSTREAM_NAME = Windows-10
+UPSTREAM_URL = https://github.com/B00merang-Artwork/$(UPSTREAM_NAME)
+UPSTREAM_SOURCE_DIR = $(UPSTREAM_NAME)-$(PACKAGE_VERSION)
+SOURCE_TARBALL_URL = $(UPSTREAM_URL)/archive/refs/tags/$(PACKAGE_VERSION).tar.gz
+SOURCE_TARBALL_SHA256SUM = 646b8bc8e04d38034889caacef3846cb6655995f1805d87b3ff7bc0b29249aae
+
+.PHONY : all build md5sum control clean mostlyclean
+
+all : $(SOURCE_TARBALL) $(SOURCE_DIR) build md5sum control $(PACK)
+
+$(SOURCE_TARBALL) :
+	if $(TEST) ! -e $@; then $(FETCH) $(SOURCE_TARBALL_URL) $@; fi
+	$(ECHO) "$(SOURCE_TARBALL_SHA256SUM) $@" | $(SHA256SUM) -c
+
+$(SOURCE_DIR) : $(SOURCE_TARBALL)
+	if $(TEST) -e $@; then $(RM) -r -f $@; fi
+	$(TAR) -z -x -f $<
+	$(MV) $(UPSTREAM_SOURCE_DIR) $@
+
+build : $(SOURCE_DIR)
+	$(RM) -r -f $(BUILD_DIR)
+	$(MKDIR_P) $(BUILD_DIR)
+	cd $< && $(INSTALL) -d -m 755 "$(PWD)/$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)"
+	cd $< && $(CP) -a * "$(PWD)/$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)"
+	$(RM) -f "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)/README.md"
+	$(FIND) "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)" -type f -exec $(CHMOD) 644 {} +
+	$(FIND) "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)" -type l -exec $(CHMOD) -c 644 {} +
+	$(INSTALL) -D -m 644 $(srcdir)/copyright -t $(BUILD_DIR)/usr/share/doc/$(PACKAGE_NAME)
+
+md5sum : build
+	$(MKDIR_P) $(BUILD_DIR)/DEBIAN
+	cd $(BUILD_DIR) && $(FIND) . -type f ! -path "./DEBIAN/*" -exec $(MD5SUM) {} \; | $(SED) 's#\./##' > ./DEBIAN/md5sums
+
+control : build control.in
+	$(MKDIR_P) $(BUILD_DIR)/DEBIAN
+	$(CP) control.in $(BUILD_DIR)/DEBIAN/control
+	cd $(BUILD_DIR) && ISIZE=$$(du -sk --exclude=DEBIAN . | cut -f1) && sed -i "s/@ISIZE@/$$ISIZE/g" ./DEBIAN/control
+
+$(PACK) : build control md5sum
+	$(DPKG_DEB) --root-owner-group --verbose --build $(BUILD_DIR) $@
+
+clean :
+	$(RM) -r -f $(BUILD_DIR)
+	$(RM) -f $(PACK)
+	$(RM) -f $(SOURCE_TARBALL)
+	$(RM) -r -f $(SOURCE_DIR)
+
+mostlyclean : clean
+	$(RM) -r control.in config.status config.log Makefile

@@ -1,0 +1,9 @@
+Package: @PACKAGE_NAME@
+Architecture: any
+Description: Windows 10 icon theme
+Homepage: https://github.com/ChenPi11/windows10-themes-deb
+Installed-Size: @ISIZE@
+Maintainer: ChenPi11 <@PACKAGE_BUGREPORT@>
+Priority: optional
+Section: misc
+Version: @PACKAGE_VERSION@-1
