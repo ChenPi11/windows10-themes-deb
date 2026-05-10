@@ -82,7 +82,8 @@ md5sum : build
 
 control : build control.in
 	$(MKDIR_P) $(BUILD_DIR)/DEBIAN
-	$(CP) control.in $(BUILD_DIR)/DEBIAN/control
+	$(CP) $(srcdir)/control.in $(BUILD_DIR)/DEBIAN/control
+	$(CP) $(srcdir)/postinst $(BUILD_DIR)/DEBIAN
 	cd $(BUILD_DIR) && ISIZE=$$(du -sk --exclude=DEBIAN . | cut -f1) && sed -i "s/@ISIZE@/$$ISIZE/g" ./DEBIAN/control
 
 changelog : build
