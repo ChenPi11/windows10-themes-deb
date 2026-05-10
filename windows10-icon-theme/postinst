@@ -4,7 +4,7 @@ set -e
 
 case "$1" in
     configure)
-    gtk-update-icon-cache -f -t /usr/share/icons/Windows10
+    gtk-update-icon-cache -f -t /usr/share/icons/Windows-10
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
