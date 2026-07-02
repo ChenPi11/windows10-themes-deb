@@ -69,7 +69,7 @@ download() {
     case "$DOWNLOADER" in
         aria2c)
             # aria2c: resume enabled, follow redirects, use output path.
-            aria2c --continue=true --max-redirect=20 -o "$OUTPUT" "$URL"
+            aria2c --continue=true -o "$OUTPUT" "$URL"
             ;;
         wget)
             # wget: resume, output to file, follow redirects.
