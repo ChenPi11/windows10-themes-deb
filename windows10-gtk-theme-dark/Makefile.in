@@ -78,11 +78,11 @@ build : $(SOURCE_DIR)
 	$(INSTALL) -D -m 644 $(srcdir)/copyright -t $(BUILD_DIR)/usr/share/doc/$(PACKAGE_NAME)
 
 md5sum : build
-	$(MKDIR_P) $(BUILD_DIR)/DEBIAN
+	$(MKDIR_P) $(BUILD_DIR)/DEBIAN && $(CHMOD) 0755 $(BUILD_DIR)/DEBIAN
 	cd $(BUILD_DIR) && $(FIND) . -type f ! -path "./DEBIAN/*" -exec $(MD5SUM) {} \; | $(SED) 's#\./##' > ./DEBIAN/md5sums
 
 control : build control.in
-	$(MKDIR_P) $(BUILD_DIR)/DEBIAN
+	$(MKDIR_P) $(BUILD_DIR)/DEBIAN && $(CHMOD) 0755 $(BUILD_DIR)/DEBIAN
 	$(CP) control.in $(BUILD_DIR)/DEBIAN/control
 	cd $(BUILD_DIR) && ISIZE=$$(du -sk --exclude=DEBIAN . | cut -f1) && sed -i "s/@ISIZE@/$$ISIZE/g" ./DEBIAN/control
 
