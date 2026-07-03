@@ -78,6 +78,13 @@ AC_PATH_PROG([GZIP], [gzip], [gzip], [])
 AS_IF([test "x$GZIP" = "x"],
           [AC_MSG_ERROR([gzip is required but not found.])])
 
+AC_ARG_WITH([data-dir-prefix],
+            [AS_HELP_STRING([--with-data-dir-prefix=PREFIX],
+                            [The prefix for data directory installation [/usr/share]])],
+            [data_dir_prefix="$withval"],
+            [data_dir_prefix="/usr/share"])
+AC_SUBST([DATA_DIR_PREFIX], [$data_dir_prefix])
+
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([control.in])
 AC_OUTPUT

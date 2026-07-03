@@ -29,6 +29,13 @@ AS_IF([test "x$RM" = "x"],
       [AC_MSG_ERROR([rm is required but not found.])])
 AC_SUBST([RM])
 
+AC_ARG_WITH([data-dir-prefix],
+            [AS_HELP_STRING([--with-data-dir-prefix=PREFIX],
+                            [The prefix for data directory installation [/usr/share]])],
+            [data_dir_prefix="$withval"],
+            [data_dir_prefix="/usr/share"])
+AC_SUBST([DATA_DIR_PREFIX], [$data_dir_prefix])
+
 AC_CONFIG_SUBDIRS([windows10-gtk-theme
                    windows10-gtk-theme-dark
                    windows10-icon-theme])

@@ -34,6 +34,7 @@ TAR = @TAR@
 GZIP = @GZIP@
 FETCH = $(srcdir)/fetch.sh
 
+DATA_DIR_PREFIX = @DATA_DIR_PREFIX@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -66,15 +67,15 @@ $(SOURCE_DIR) : $(SOURCE_TARBALL)
 build : $(SOURCE_DIR)
 	$(RM) -r -f $(BUILD_DIR)
 	$(MKDIR_P) $(BUILD_DIR)
-	cd $< && $(INSTALL) -d -m 755 "$(PWD)/$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)"
-	cd $< && $(CP) -a * "$(PWD)/$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)"
-	$(RM) -f "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)/README.md"
-	$(RM) -f "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)/CREDITS"
-	$(RM) -f "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)/LICENSE.md"
-	$(FIND) "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)" -type d -exec $(CHMOD) 755 {} +
-	$(FIND) "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)" -type f -exec $(CHMOD) 644 {} +
-	$(FIND) "$(BUILD_DIR)/usr/share/icons/$(UPSTREAM_NAME)" -type l -xtype f -exec $(CHMOD) -c 644 {} +
-	$(INSTALL) -D -m 644 $(srcdir)/copyright -t $(BUILD_DIR)/usr/share/doc/$(PACKAGE_NAME)
+	cd $< && $(INSTALL) -d -m 755 "$(PWD)/$(BUILD_DIR)/$(DATA_DIR_PREFIX)/icons/$(UPSTREAM_NAME)"
+	cd $< && $(CP) -a * "$(PWD)/$(BUILD_DIR)/$(DATA_DIR_PREFIX)/icons/$(UPSTREAM_NAME)"
+	$(RM) -f "$(BUILD_DIR)/$(DATA_DIR_PREFIX)/icons/$(UPSTREAM_NAME)/README.md"
+	$(RM) -f "$(BUILD_DIR)/$(DATA_DIR_PREFIX)/icons/$(UPSTREAM_NAME)/CREDITS"
+	$(RM) -f "$(BUILD_DIR)/$(DATA_DIR_PREFIX)/icons/$(UPSTREAM_NAME)/LICENSE.md"
+	$(FIND) "$(BUILD_DIR)/$(DATA_DIR_PREFIX)/icons/$(UPSTREAM_NAME)" -type d -exec $(CHMOD) 755 {} +
+	$(FIND) "$(BUILD_DIR)/$(DATA_DIR_PREFIX)/icons/$(UPSTREAM_NAME)" -type f -exec $(CHMOD) 644 {} +
+	$(FIND) "$(BUILD_DIR)/$(DATA_DIR_PREFIX)/icons/$(UPSTREAM_NAME)" -type l -xtype f -exec $(CHMOD) -c 644 {} +
+	$(INSTALL) -D -m 644 $(srcdir)/copyright -t $(BUILD_DIR)/$(DATA_DIR_PREFIX)/doc/$(PACKAGE_NAME)
 
 md5sum : build
 	$(MKDIR_P) $(BUILD_DIR)/DEBIAN && $(CHMOD) 0755 $(BUILD_DIR)/DEBIAN
@@ -88,8 +89,8 @@ control : build control.in
 	cd $(BUILD_DIR) && ISIZE=$$(du -sk --exclude=DEBIAN . | cut -f1) && sed -i "s/@ISIZE@/$$ISIZE/g" ./DEBIAN/control
 
 changelog : build
-	$(INSTALL) -D -m 644 $(srcdir)/changelog.Debian -t $(BUILD_DIR)/usr/share/doc/$(PACKAGE_NAME)
-	$(GZIP) -n -9 -v $(BUILD_DIR)/usr/share/doc/$(PACKAGE_NAME)/changelog.Debian
+	$(INSTALL) -D -m 644 $(srcdir)/changelog.Debian -t $(BUILD_DIR)/$(DATA_DIR_PREFIX)/doc/$(PACKAGE_NAME)
+	$(GZIP) -n -9 -v $(BUILD_DIR)/$(DATA_DIR_PREFIX)/doc/$(PACKAGE_NAME)/changelog.Debian
 
 $(PACK) : build control md5sum changelog
 	$(DPKG_DEB) --root-owner-group --verbose --build $(BUILD_DIR) $@
